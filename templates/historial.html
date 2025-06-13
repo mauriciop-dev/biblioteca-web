@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Historial de préstamos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+<body>
+    <h1>📖 Historial de préstamos por usuario</h1>
+
+    <form method="get" action="/historial">
+        <label for="usuario_id">Selecciona usuario:</label>
+        <select name="usuario_id" onchange="this.form.submit()">
+            <option value="">-- Selecciona --</option>
+            {% for u in usuarios %}
+                <option value="{{ u['id'] }}" {% if usuario_id == u['id']|string %}selected{% endif %}>
+                    {{ u['nombre'] }}
+                </option>
+            {% endfor %}
+        </select>
+    </form>
+
+    {% if libros %}
+        <h2>Libros prestados:</h2>
+        <ul>
+            {% for libro in libros %}
+                <li>{{ libro['titulo'] }} - {{ libro['autor'] }}</li>
+            {% endfor %}
+        </ul>
+    {% elif usuario_id %}
+        <p>Este usuario no tiene libros prestados.</p>
+    {% endif %}
+
+    <a href="/">⬅ Volver al inicio</a>
+</body>
+</html>

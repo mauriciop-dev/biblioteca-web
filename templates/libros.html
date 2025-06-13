@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Libros registrados</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+<body>
+    <h1>📚 Lista de libros</h1>
+
+    <form method="POST">
+        <input type="text" name="titulo" placeholder="Título" required>
+        <input type="text" name="autor" placeholder="Autor" required>
+        <button type="submit">Agregar libro</button>
+    </form>
+
+    <ul>
+        {% for libro in libros %}
+            <li>
+                {{ libro['titulo'] }} de {{ libro['autor'] }}
+                {% if libro['prestado'] %}
+                    (Prestado)
+                {% else %}
+                    (Disponible)
+                {% endif %}
+            </li>
+        {% else %}
+            <li>No hay libros registrados.</li>
+        {% endfor %}
+    </ul>
+
+    <a href="/">⬅ Volver al inicio</a>
+</body>
+</html>

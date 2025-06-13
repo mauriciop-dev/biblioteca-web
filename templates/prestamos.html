@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Préstamos de libros</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+<body>
+    <h1>📦 Prestar un libro</h1>
+
+    {% if error %}
+        <p style="color:red;">{{ error }}</p>
+    {% endif %}
+
+    <form method="POST">
+        <label for="usuario_id">Usuario:</label>
+        <select name="usuario_id" required>
+            {% for u in usuarios %}
+                <option value="{{ u['id'] }}">{{ u['nombre'] }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="libro_id">Libro:</label>
+        <select name="libro_id" required>
+            {% for l in libros %}
+                <option value="{{ l['id'] }}">{{ l['titulo'] }} - {{ l['autor'] }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Prestar libro</button>
+    </form>
+
+    <a href="/">⬅ Volver al inicio</a>
+</body>
+</html>

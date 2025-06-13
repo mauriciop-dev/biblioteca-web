@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Devolver libro</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+<body>
+    <h1>🔄 Devolver libro</h1>
+
+    <form method="get" action="/devoluciones">
+        <label for="usuario_id">Selecciona usuario:</label>
+        <select name="usuario_id" onchange="this.form.submit()">
+            <option value="">-- Selecciona --</option>
+            {% for u in usuarios %}
+                <option value="{{ u['id'] }}" {% if usuario_id == u['id']|string %}selected{% endif %}>
+                    {{ u['nombre'] }}
+                </option>
+            {% endfor %}
+        </select>
+    </form>
+
+    {% if libros %}
+        <form method="post">
+            <input type="hidden" name="usuario_id" value="{{ usuario_id }}">
+            <label for="libro_id">Selecciona libro a devolver:</label>
+            <select name="libro_id" required>
+                {% for libro in libros %}
+                    <option value="{{ libro['id'] }}">{{ libro['titulo'] }} - {{ libro['autor'] }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Devolver</button>
+        </form>
+    {% elif usuario_id %}
+        <p>No hay libros prestados por este usuario.</p>
+    {% endif %}
+
+    <a href="/">⬅ Volver al inicio</a>
+</body>
+</html>
