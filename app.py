@@ -234,7 +234,9 @@ def estadisticas():
 
     return render_template('estadisticas.html', imagen=img, mensaje=None)
 
+crear_tablas_si_no_existen()
+
 if __name__ == '__main__':
-    crear_tablas_si_no_existen()
     print("🛠️ Tablas verificadas. 🔥 Iniciando servidor Flask...")
     app.run(debug=True)
+
