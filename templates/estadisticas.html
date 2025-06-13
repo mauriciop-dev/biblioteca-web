@@ -6,10 +6,15 @@
 
 </head>
 <body>
-    <h1>📊 Estadísticas de préstamos</h1>
+   <h1>📊 Estadísticas de préstamos</h1>
 
-    <img src="data:image/png;base64,{{ imagen }}" alt="Gráfico de estadísticas">
+{% if mensaje %}
+  <p style="color: gray;">{{ mensaje }}</p>
+{% else %}
+  <img src="data:image/png;base64,{{ imagen }}" alt="Gráfico de estadísticas">
+{% endif %}
 
-    <a href="/">⬅ Volver al inicio</a>
+<a href="/">⬅ Volver al inicio</a>
+
 </body>
 </html>

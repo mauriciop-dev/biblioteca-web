@@ -172,6 +172,29 @@ def estadisticas():
     ''').fetchall()
     conn.close()
 
+    if not data:
+        return render_template('estadisticas.html', imagen=None, mensaje="📭 No hay datos para mostrar estadísticas.")
+
+    nombres = [row['nombre'] for row in data]
+    cantidades = [row['cantidad'] for row in data]
+
+    fig, ax = plt.subplots()
+    ax.bar(nombres, cantidades, color='skyblue')
+    ax.set_title('📊 Préstamos por Usuario')
+    ax.set_xlabel('Usuario')
+    ax.set_ylabel('Cantidad de libros')
+    plt.xticks(rotation=45, ha='right')
+    plt.tight_layout()
+
+    buf = BytesIO()
+    plt.savefig(buf, format='png')
+    buf.seek(0)
+    img = base64.b64encode(buf.read()).decode('utf-8')
+    plt.close()
+
+    return render_template('estadisticas.html', imagen=img, mensaje=None)
+
+
     # Preparar datos
     nombres = [row['nombre'] for row in data]
     cantidades = [row['cantidad'] for row in data]
