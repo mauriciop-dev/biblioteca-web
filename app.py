@@ -149,24 +149,28 @@ def devoluciones():
 def historial():
     conn = get_db_connection()
     cur = conn.cursor()
+
     cur.execute('SELECT * FROM usuarios')
     usuarios = cur.fetchall()
 
     usuario_id = request.args.get('usuario_id')
-    libros = []
+    prestamos = []
+
     if usuario_id:
         cur.execute('''
-        SELECT libros.titulo, libros.autor
-        FROM prestamos
-        JOIN libros ON prestamos.libro_id = libros.id
-        WHERE prestamos.usuario_id = %s AND prestamos.fecha_devolucion IS NULL
-    ''', (usuario_id,))
-    libros = cur.fetchall()
-
+            SELECT libros.titulo, libros.autor, prestamos.fecha_prestamo, prestamos.fecha_devolucion
+            FROM prestamos
+            JOIN libros ON prestamos.libro_id = libros.id
+            WHERE prestamos.usuario_id = %s
+            ORDER BY prestamos.fecha_prestamo DESC
+        ''', (usuario_id,))
+        prestamos = cur.fetchall()
 
     cur.close()
     conn.close()
-    return render_template('historial.html', usuarios=usuarios, libros=libros, usuario_id=usuario_id)
+
+    return render_template('historial.html', usuarios=usuarios, prestamos=prestamos, usuario_id=usuario_id)
+
 
 @app.route('/exportar-excel')
 def exportar_excel():
