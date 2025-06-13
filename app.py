@@ -80,11 +80,17 @@ def libros():
         cur.execute('INSERT INTO libros (titulo, autor, prestado) VALUES (%s, %s, %s)', (titulo, autor, False))
         conn.commit()
 
-    cur.execute('SELECT * FROM libros')
+    cur.execute('''
+        SELECT libros.*, usuarios.nombre AS prestado_a
+        FROM libros
+        LEFT JOIN prestamos ON libros.id = prestamos.libro_id AND prestamos.fecha_devolucion IS NULL
+        LEFT JOIN usuarios ON prestamos.usuario_id = usuarios.id
+    ''')
     libros = cur.fetchall()
     cur.close()
     conn.close()
     return render_template('libros.html', libros=libros)
+
 
 @app.route('/prestamos', methods=['GET', 'POST'])
 def prestamos():

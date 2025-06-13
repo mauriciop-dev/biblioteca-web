@@ -18,11 +18,15 @@
         {% for libro in libros %}
             <li>
                 {{ libro['titulo'] }} de {{ libro['autor'] }}
-                {% if libro['prestado'] %}
-                    (Prestado)
-                {% else %}
-                    (Disponible)
-                {% endif %}
+                <span>
+                    {% if libro.prestado %}
+                    – Prestado a {{ libro.prestado_a or "?" }}
+                    {% else %}
+                    – Disponible
+                    {% endif %}
+                </span>
+
+
             </li>
         {% else %}
             <li>No hay libros registrados.</li>
