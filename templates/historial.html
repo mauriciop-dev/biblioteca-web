@@ -3,32 +3,40 @@
 <head>
     <title>Historial de préstamos</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
 </head>
 <body>
-    <h1>📖 Historial de préstamos por usuario</h1>
+    <h1>📖 Historial de préstamos</h1>
 
-    <form method="get" action="/historial">
-        <label for="usuario_id">Selecciona usuario:</label>
-        <select name="usuario_id" onchange="this.form.submit()">
-            <option value="">-- Selecciona --</option>
-            {% for u in usuarios %}
-                <option value="{{ u['id'] }}" {% if usuario_id == u['id']|string %}selected{% endif %}>
-                    {{ u['nombre'] }}
+    <form method="GET">
+        <label>Selecciona un usuario:</label>
+        <select name="usuario_id">
+            {% for usuario in usuarios %}
+                <option value="{{ usuario.id }}" {% if usuario.id|string == usuario_id %}selected{% endif %}>
+                    {{ usuario.nombre }}
                 </option>
             {% endfor %}
         </select>
+        <button type="submit">Ver historial</button>
     </form>
 
-    {% if libros %}
-        <h2>Libros prestados:</h2>
+    {% if prestamos %}
+        <h2>📚 Libros prestados</h2>
         <ul>
-            {% for libro in libros %}
-                <li>{{ libro['titulo'] }} - {{ libro['autor'] }}</li>
+            {% for p in prestamos %}
+                <li>
+                    <strong>{{ p.titulo }}</strong> de {{ p.autor }}<br>
+                    📅 Prestado el: {{ p.fecha_prestamo.strftime('%Y-%m-%d %H:%M') }}<br>
+                    📦 Devuelto el: 
+                    {% if p.fecha_devolucion %}
+                        {{ p.fecha_devolucion.strftime('%Y-%m-%d %H:%M') }}
+                    {% else %}
+                        <em>En préstamo</em>
+                    {% endif %}
+                </li>
             {% endfor %}
         </ul>
     {% elif usuario_id %}
-        <p>Este usuario no tiene libros prestados.</p>
+        <p>📭 Este usuario no tiene préstamos registrados.</p>
     {% endif %}
 
     <a href="/">⬅ Volver al inicio</a>
