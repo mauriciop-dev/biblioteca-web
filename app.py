@@ -1,4 +1,3 @@
-
 from flask import Flask, render_template, request, redirect, url_for, send_file
 import os
 import psycopg2
@@ -15,6 +14,34 @@ def get_db_connection():
     url = os.environ.get('DATABASE_URL')
     conn = psycopg2.connect(url, cursor_factory=psycopg2.extras.RealDictCursor)
     return conn
+
+def crear_tablas_si_no_existen():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('''
+        CREATE TABLE IF NOT EXISTS usuarios (
+            id SERIAL PRIMARY KEY,
+            nombre VARCHAR(100) UNIQUE
+        );
+
+        CREATE TABLE IF NOT EXISTS libros (
+            id SERIAL PRIMARY KEY,
+            titulo VARCHAR(200),
+            autor VARCHAR(100),
+            prestado BOOLEAN DEFAULT FALSE
+        );
+
+        CREATE TABLE IF NOT EXISTS prestamos (
+            id SERIAL PRIMARY KEY,
+            usuario_id INTEGER REFERENCES usuarios(id),
+            libro_id INTEGER REFERENCES libros(id),
+            fecha_prestamo TIMESTAMP,
+            fecha_devolucion TIMESTAMP
+        );
+    ''')
+    conn.commit()
+    cur.close()
+    conn.close()
 
 @app.route('/')
 def index():
@@ -208,5 +235,6 @@ def estadisticas():
     return render_template('estadisticas.html', imagen=img, mensaje=None)
 
 if __name__ == '__main__':
-    print("🔥 Iniciando servidor Flask...")
+    crear_tablas_si_no_existen()
+    print("🛠️ Tablas verificadas. 🔥 Iniciando servidor Flask...")
     app.run(debug=True)
