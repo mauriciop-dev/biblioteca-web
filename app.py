@@ -150,11 +150,13 @@ def historial():
     libros = []
     if usuario_id:
         cur.execute('''
-            SELECT libros.titulo, libros.autor
-            FROM libros
-            WHERE libros.prestado = TRUE
-        ''')
-        libros = cur.fetchall()
+        SELECT libros.titulo, libros.autor
+        FROM prestamos
+        JOIN libros ON prestamos.libro_id = libros.id
+        WHERE prestamos.usuario_id = %s AND prestamos.fecha_devolucion IS NULL
+    ''', (usuario_id,))
+    libros = cur.fetchall()
+
 
     cur.close()
     conn.close()
