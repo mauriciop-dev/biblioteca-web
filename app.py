@@ -91,7 +91,6 @@ def libros():
     conn.close()
     return render_template('libros.html', libros=libros)
 
-
 @app.route('/prestamos', methods=['GET', 'POST'])
 def prestamos():
     conn = get_db_connection()
@@ -138,7 +137,12 @@ def devoluciones():
     usuario_id = request.args.get('usuario_id')
     libros = []
     if usuario_id:
-        cur.execute('SELECT * FROM libros WHERE prestado = TRUE')
+        cur.execute('''
+            SELECT libros.id, libros.titulo, libros.autor
+            FROM prestamos
+            JOIN libros ON prestamos.libro_id = libros.id
+            WHERE prestamos.usuario_id = %s AND prestamos.fecha_devolucion IS NULL
+        ''', (usuario_id,))
         libros = cur.fetchall()
 
     cur.close()
@@ -168,9 +172,7 @@ def historial():
 
     cur.close()
     conn.close()
-
     return render_template('historial.html', usuarios=usuarios, prestamos=prestamos, usuario_id=usuario_id)
-
 
 @app.route('/exportar-excel')
 def exportar_excel():
@@ -246,9 +248,9 @@ def estadisticas():
 
     return render_template('estadisticas.html', imagen=img, mensaje=None)
 
+# Ejecutar creación de tablas incluso en producción
 crear_tablas_si_no_existen()
 
 if __name__ == '__main__':
     print("🛠️ Tablas verificadas. 🔥 Iniciando servidor Flask...")
     app.run(debug=True)
-
