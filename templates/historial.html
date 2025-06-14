@@ -20,21 +20,42 @@
     </form>
 
     {% if prestamos %}
-        <h2>📚 Libros prestados</h2>
-        <ul>
-            {% for p in prestamos %}
-                <li>
-                    <strong>{{ p.titulo }}</strong> de {{ p.autor }}<br>
-                    📅 Prestado el: {{ p.fecha_prestamo.strftime('%Y-%m-%d %H:%M') }}<br>
-                    📦 Devuelto el: 
-                    {% if p.fecha_devolucion %}
-                        {{ p.fecha_devolucion.strftime('%Y-%m-%d %H:%M') }}
-                    {% else %}
-                        <em>En préstamo</em>
-                    {% endif %}
-                </li>
-            {% endfor %}
-        </ul>
+        <table>
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Autor</th>
+                    <th>Fecha préstamo</th>
+                    <th>Fecha entrega</th>
+                    <th>Fecha devolución</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in prestamos %}
+                <tr>
+                    <td>{{ p.titulo }}</td>
+                    <td>{{ p.autor }}</td>
+                    <td>{{ p.fecha_prestamo.strftime('%Y-%m-%d') }}</td>
+                    <td>{{ p.fecha_entrega.strftime('%Y-%m-%d') }}</td>
+                    <td>
+                        {% if p.fecha_devolucion %}
+                            {{ p.fecha_devolucion.strftime('%Y-%m-%d') }}
+                        {% else %}
+                            <em>En préstamo</em>
+                        {% endif %}
+                    </td>
+                    <td class="{% if p.vencido %}alerta-vencida{% else %}alerta-ok{% endif %}">
+                        {% if p.vencido %}
+                            ⚠️ Vencido
+                        {% else %}
+                            ✅ En plazo
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     {% elif usuario_id %}
         <p>📭 Este usuario no tiene préstamos registrados.</p>
     {% endif %}

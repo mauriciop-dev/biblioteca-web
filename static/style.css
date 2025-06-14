@@ -108,3 +108,13 @@ th {
     text-decoration: underline;
 }
 
+.alerta-vencida {
+    color: red;
+    font-weight: bold;
+}
+
+.alerta-ok {
+    color: green;
+    font-weight: bold;
+}
+

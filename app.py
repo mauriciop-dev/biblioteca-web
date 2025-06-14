@@ -160,6 +160,8 @@ def devoluciones():
     conn.close()
     return render_template('devoluciones.html', usuarios=usuarios, libros=libros, usuario_id=usuario_id)
 
+from datetime import datetime, timedelta
+
 @app.route('/historial')
 def historial():
     conn = get_db_connection()
@@ -179,11 +181,27 @@ def historial():
             WHERE prestamos.usuario_id = %s
             ORDER BY prestamos.fecha_prestamo DESC
         ''', (usuario_id,))
-        prestamos = cur.fetchall()
+        rows = cur.fetchall()
+
+        for p in rows:
+            fecha_entrega = p['fecha_prestamo'] + timedelta(days=30)
+            hoy = datetime.now()
+            vencido = False
+
+            if p['fecha_devolucion']:
+                vencido = p['fecha_devolucion'] > fecha_entrega
+            else:
+                vencido = hoy > fecha_entrega
+
+            p['fecha_entrega'] = fecha_entrega
+            p['vencido'] = vencido
+            prestamos.append(p)
 
     cur.close()
     conn.close()
+
     return render_template('historial.html', usuarios=usuarios, prestamos=prestamos, usuario_id=usuario_id)
+
 
 @app.route('/exportar-excel')
 def exportar_excel():
