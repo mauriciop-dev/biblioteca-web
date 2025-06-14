@@ -42,9 +42,10 @@
                         {% if p.fecha_devolucion %}
                             {{ p.fecha_devolucion.strftime('%Y-%m-%d') }}
                         {% else %}
-                            <em>En préstamo</em>
+                            <span class="en-prestamo">En préstamo</span>
                         {% endif %}
                     </td>
+
                     <td class="{% if p.vencido %}alerta-vencida{% else %}alerta-ok{% endif %}">
                         {% if p.vencido %}
                             ⚠️ Vencido
