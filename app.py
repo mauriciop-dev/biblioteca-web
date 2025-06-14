@@ -80,16 +80,27 @@ def libros():
         cur.execute('INSERT INTO libros (titulo, autor, prestado) VALUES (%s, %s, %s)', (titulo, autor, False))
         conn.commit()
 
-    cur.execute('''
+    filtro = request.args.get('filtro')  # "disponibles", "prestados", o None
+
+    query = '''
         SELECT libros.*, usuarios.nombre AS prestado_a
         FROM libros
         LEFT JOIN prestamos ON libros.id = prestamos.libro_id AND prestamos.fecha_devolucion IS NULL
         LEFT JOIN usuarios ON prestamos.usuario_id = usuarios.id
-    ''')
+    '''
+
+    if filtro == 'disponibles':
+        query += ' WHERE libros.prestado = FALSE'
+    elif filtro == 'prestados':
+        query += ' WHERE libros.prestado = TRUE'
+
+    cur.execute(query)
     libros = cur.fetchall()
     cur.close()
     conn.close()
-    return render_template('libros.html', libros=libros)
+
+    return render_template('libros.html', libros=libros, filtro=filtro)
+
 
 @app.route('/prestamos', methods=['GET', 'POST'])
 def prestamos():
