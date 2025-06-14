@@ -66,3 +66,30 @@ ul li, table td, table th {
     color: orange;
     font-weight: bold;
 }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1em;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #f5f5f5;
+}
+
+.estado-disponible {
+    color: green;
+    font-weight: bold;
+}
+
+.estado-prestado {
+    color: orange;
+    font-weight: bold;
+}
+

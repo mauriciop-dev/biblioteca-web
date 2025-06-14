@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Libros registrados</title>
+    <title>📚 Libros registrados</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
 </head>
 <body>
     <h1>📚 Lista de libros</h1>
@@ -14,24 +13,34 @@
         <button type="submit">Agregar libro</button>
     </form>
 
-    <ul>
-        {% for libro in libros %}
-            <li>
-                {{ libro['titulo'] }} de {{ libro['autor'] }}
-                <span class="{% if libro.prestado %}estado-prestado{% else %}estado-disponible{% endif %}">
-                    {% if libro.prestado %}
-                    – Prestado a {{ libro.prestado_a or "?" }}
-                    {% else %}
-                    – Disponible
-                    {% endif %}
-                </span>
-
-
-            </li>
-        {% else %}
-            <li>No hay libros registrados.</li>
-        {% endfor %}
-    </ul>
+    <table>
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th>Autor</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for libro in libros %}
+                <tr>
+                    <td>{{ libro['titulo'] }}</td>
+                    <td>{{ libro['autor'] }}</td>
+                    <td class="{% if libro.prestado %}estado-prestado{% else %}estado-disponible{% endif %}">
+                        {% if libro.prestado %}
+                            📕 Prestado a {{ libro.prestado_a or "?" }}
+                        {% else %}
+                            ✅ Disponible
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">No hay libros registrados.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
     <a href="/">⬅ Volver al inicio</a>
 </body>
