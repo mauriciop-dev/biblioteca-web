@@ -18,7 +18,7 @@
         {% for libro in libros %}
             <li>
                 {{ libro['titulo'] }} de {{ libro['autor'] }}
-                <span>
+                <span class="{% if libro.prestado %}estado-prestado{% else %}estado-disponible{% endif %}">
                     {% if libro.prestado %}
                     – Prestado a {{ libro.prestado_a or "?" }}
                     {% else %}

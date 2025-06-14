@@ -56,3 +56,13 @@ a:hover {
 ul li, table td, table th {
     padding: 5px 10px;
 }
+
+.estado-disponible {
+    color: green;
+    font-weight: bold;
+}
+
+.estado-prestado {
+    color: orange;
+    font-weight: bold;
+}
