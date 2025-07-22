@@ -281,5 +281,6 @@ def estadisticas():
 crear_tablas_si_no_existen()
 
 if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000, debug=True)
     print("🛠️ Tablas verificadas. 🔥 Iniciando servidor Flask...")
     app.run(debug=True)

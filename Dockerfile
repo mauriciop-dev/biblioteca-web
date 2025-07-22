@@ -8,6 +8,7 @@ WORKDIR /app
 COPY . /app
 
 # Instala las dependencias
+RUN echo "Docker está construyendo correctamente"
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Expón el puerto que usará la app
